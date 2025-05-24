@@ -8,10 +8,11 @@
 
 #import "BlePlx.h"
 #import "BlePlx-Swift.h"
-
+#import "BleStatePreservationHandler.h"
 
 @interface BlePlx () <BleClientManagerDelegate>
 @property(nonatomic) BleClientManager* manager;
+@property (nonatomic, strong) BleStatePreservationHandler *statePreservationHandler;
 @end
 
 @implementation BlePlx
@@ -23,6 +24,13 @@
 
 RCT_EXPORT_MODULE();
 
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _statePreservationHandler = [[BleStatePreservationHandler alloc] initWithEventEmitter:self];
+    }
+    return self;
+}
 
 - (void)dispatchEvent:(NSString * _Nonnull)name value:(id _Nonnull)value {
     if (hasListeners) {
@@ -38,8 +46,9 @@ RCT_EXPORT_MODULE();
     hasListeners = NO;
 }
 
+// Add "DeviceDisconnected" to supported events
 - (NSArray<NSString *> *)supportedEvents {
-    return BleEvent.events;
+    return [@[@"DeviceDisconnected"] arrayByAddingObjectsFromArray:BleEvent.events];
 }
 
 - (NSDictionary<NSString *,id> *)constantsToExport {
