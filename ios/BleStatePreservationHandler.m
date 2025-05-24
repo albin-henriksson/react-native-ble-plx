@@ -1,16 +1,13 @@
-#import <Foundation/Foundation.h>
-#import <CoreBluetooth/CoreBluetooth.h>
-#import <React/RCTEventEmitter.h>
+#import "BleStatePreservationHandler.h"
 
 @implementation BleStatePreservationHandler
 
 - (instancetype)initWithEventEmitter:(RCTEventEmitter *)eventEmitter {
     self = [super init];
     if (self) {
-        self.eventEmitter = eventEmitter; // Use self.propertyName
-        self.disconnectedDevices = [NSMutableArray new]; // Use self.propertyName
+        self.eventEmitter = eventEmitter;
         NSDictionary *options = @{CBCentralManagerOptionRestoreIdentifierKey: @"BleStatePreservationHandler"};
-        self.centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil options:options]; // Use self.propertyName
+        self.centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil options:options];
     }
     return self;
 }
@@ -18,15 +15,16 @@
 // CBCentralManagerDelegate - State Restoration
 - (void)centralManager:(CBCentralManager *)central willRestoreState:(NSDictionary<NSString *, id> *)dict {
     NSArray *peripherals = dict[CBCentralManagerRestoredStatePeripheralsKey];
-    for (CBPeripheral *peripheral in peripherals) {
-        [self.disconnectedDevices addObject:peripheral.identifier.UUIDString];
+    // Emit event to React Native
+    if (self.eventEmitter) {
+        [self.eventEmitter sendEventWithName:@"StateRestored"
+                                         body:@{@"restoredPeripherals": peripherals}];
     }
 }
 
 // CBCentralManagerDelegate - Disconnection
 - (void)centralManager:(CBCentralManager *)central didDisconnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error {
     NSString *deviceIdentifier = peripheral.identifier.UUIDString;
-    [self.disconnectedDevices addObject:deviceIdentifier];
 
     // Emit event to React Native
     if (self.eventEmitter) {
