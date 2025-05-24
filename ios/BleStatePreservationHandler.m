@@ -2,21 +2,15 @@
 #import <CoreBluetooth/CoreBluetooth.h>
 #import <React/RCTEventEmitter.h>
 
-@interface BleStatePreservationHandler : NSObject <CBCentralManagerDelegate>
-@property (nonatomic, strong) CBCentralManager *centralManager;
-@property (nonatomic, strong) NSMutableArray<NSString *> *disconnectedDevices;
-@property (nonatomic, weak) RCTEventEmitter *eventEmitter;
-@end
-
 @implementation BleStatePreservationHandler
 
 - (instancetype)initWithEventEmitter:(RCTEventEmitter *)eventEmitter {
     self = [super init];
     if (self) {
-        _eventEmitter = eventEmitter;
-        _disconnectedDevices = [NSMutableArray new];
+        self.eventEmitter = eventEmitter; // Use self.propertyName
+        self.disconnectedDevices = [NSMutableArray new]; // Use self.propertyName
         NSDictionary *options = @{CBCentralManagerOptionRestoreIdentifierKey: @"BleStatePreservationHandler"};
-        _centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil options:options];
+        self.centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil options:options]; // Use self.propertyName
     }
     return self;
 }
