@@ -8,7 +8,7 @@
 
 #import "BlePlx.h"
 #import "BlePlx-Swift.h"
-#import "BleStatePreservationHandler.h"
+#import "BleStatePreservationHandler.m"
 
 @interface BlePlx () <BleClientManagerDelegate>
 @property(nonatomic) BleClientManager* manager;
