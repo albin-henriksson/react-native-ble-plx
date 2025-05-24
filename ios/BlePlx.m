@@ -46,9 +46,9 @@ RCT_EXPORT_MODULE();
     hasListeners = NO;
 }
 
-// Add "DeviceDisconnected" to supported events
+// Add "StateRestored" and "DeviceDisconnected" to supported events
 - (NSArray<NSString *> *)supportedEvents {
-    return [@[@"DeviceDisconnected"] arrayByAddingObjectsFromArray:BleEvent.events];
+    return [@[@"StateRestored", @"DeviceDisconnected"] arrayByAddingObjectsFromArray:BleEvent.events];
 }
 
 - (NSDictionary<NSString *,id> *)constantsToExport {
